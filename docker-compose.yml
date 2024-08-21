@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:13.3
+    container_name: postgres
+    environment:
+      POSTGRES_DB: "travelagent"
+      POSTGRES_USER: "K0ras1K"
+      POSTGRES_PASSWORD: "Shah!9Sah@"
+    ports:
+      - "5432:5432"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    hostname: redis
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis:/data
+
+  travelagent:
+    build: .
+    container_name: travelagent
+    depends_on:
+      - postgres
+    volumes:
+      - /temp:/temp
+
+
+volumes:
+  redis:
+    driver: local
